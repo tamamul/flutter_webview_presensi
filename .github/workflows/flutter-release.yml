@@ -22,20 +22,8 @@ jobs:
           channel: stable
           flutter-version: '3.19.6'
       
-      - name: Regenerate Android folder with V2 embedding
+      - name: Create MainActivity.kt
         run: |
-          # Backup AndroidManifest.xml jika ada
-          if [ -f android/app/src/main/AndroidManifest.xml ]; then
-            cp android/app/src/main/AndroidManifest.xml /tmp/AndroidManifest.xml.backup
-          fi
-          
-          # Hapus folder android yang lama
-          rm -rf android/
-          
-          # Buat ulang project dengan V2 embedding
-          flutter create --platforms=android --org=com.marsa9 .
-          
-          # Buat folder dan file MainActivity.kt dengan benar
           mkdir -p android/app/src/main/kotlin/com/marsa9/presensi
           cat > android/app/src/main/kotlin/com/marsa9/presensi/MainActivity.kt << 'EOF'
           package com.marsa9.presensi
@@ -44,18 +32,12 @@ jobs:
           
           class MainActivity: FlutterActivity()
           EOF
-          
-          # Restore AndroidManifest.xml jika ada backup
-          if [ -f /tmp/AndroidManifest.xml.backup ]; then
-            cp /tmp/AndroidManifest.xml.backup android/app/src/main/AndroidManifest.xml
-          fi
-          
-          # Verifikasi file sudah dibuat
-          ls -la android/app/src/main/kotlin/com/marsa9/presensi/
       
-      - run: flutter pub get
-      
-      - run: flutter build apk --release
+      - name: Clean and Build
+        run: |
+          flutter clean
+          flutter pub get
+          flutter build apk --release
       
       - uses: actions/upload-artifact@v4
         with:
