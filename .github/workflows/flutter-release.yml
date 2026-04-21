@@ -22,14 +22,22 @@ jobs:
       - name: Setup Flutter
         run: |
           git clone https://github.com/flutter/flutter.git --depth 1 -b stable /opt/flutter
-          echo "$/opt/flutter/bin" >> $GITHUB_PATH
+          echo "/opt/flutter/bin" >> $GITHUB_PATH
+          echo "FLUTTER_ROOT=/opt/flutter" >> $GITHUB_ENV
+          sudo apt-get update -qq && sudo apt-get install -y -qq curl xz-utils
+        shell: bash
+
+      - name: Check Flutter version
+        run: flutter --version
         shell: bash
 
       - name: Install dependencies
         run: flutter pub get
+        shell: bash
 
       - name: Build APK Release
         run: flutter build apk --release
+        shell: bash
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
