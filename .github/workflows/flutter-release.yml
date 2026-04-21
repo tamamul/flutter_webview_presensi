@@ -17,10 +17,21 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       
+      - name: Create MainActivity.kt
+        run: |
+          mkdir -p android/app/src/main/kotlin/com/marsa9/presensi
+          cat > android/app/src/main/kotlin/com/marsa9/presensi/MainActivity.kt << 'EOF'
+          package com.marsa9.presensi
+          
+          import io.flutter.embedding.android.FlutterActivity
+          
+          class MainActivity: FlutterActivity()
+          EOF
+      
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
-          flutter-version: '3.16.9'
+          flutter-version: '3.22.5'
       
       - run: flutter pub get
       
