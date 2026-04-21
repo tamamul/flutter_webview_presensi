@@ -38,7 +38,7 @@ android {
 
     defaultConfig {
     applicationId "com.marsa9.presensi"
-    minSdkVersion 21  // Ubah dari 19 ke 21
+    minSdkVersion 21
     targetSdkVersion 34
     versionCode flutterVersionCode.toInteger()
     versionName flutterVersionName
