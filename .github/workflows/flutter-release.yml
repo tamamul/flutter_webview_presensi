@@ -20,10 +20,10 @@ jobs:
           java-version: '17'
 
       - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-          flutter-version: '3.22.5'
+        run: |
+          git clone https://github.com/flutter/flutter.git --depth 1 -b stable /opt/flutter
+          echo "$/opt/flutter/bin" >> $GITHUB_PATH
+        shell: bash
 
       - name: Install dependencies
         run: flutter pub get
