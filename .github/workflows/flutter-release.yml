@@ -17,9 +17,30 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       
-      - name: Create MainActivity.kt
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: '3.19.6'
+      
+      - name: Regenerate Android folder with V2 embedding
         run: |
-          mkdir -p android/app/src/main/kotlin/com/marsa9/presensi
+          # Backup konfigurasi penting
+          if [ -f android/app/src/main/AndroidManifest.xml ]; then
+            cp android/app/src/main/AndroidManifest.xml AndroidManifest.xml.backup
+          fi
+          
+          # Hapus folder android yang lama
+          rm -rf android/
+          
+          # Buat ulang project dengan V2 embedding
+          flutter create --platforms=android --org=com.marsa9 .
+          
+          # Restore AndroidManifest.xml jika ada backup
+          if [ -f AndroidManifest.xml.backup ]; then
+            cp AndroidManifest.xml.backup android/app/src/main/AndroidManifest.xml
+          fi
+          
+          # Pastikan MainActivity.kt sudah benar
           cat > android/app/src/main/kotlin/com/marsa9/presensi/MainActivity.kt << 'EOF'
           package com.marsa9.presensi
           
@@ -27,11 +48,6 @@ jobs:
           
           class MainActivity: FlutterActivity()
           EOF
-      
-      - uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-          flutter-version: '3.19.6'  # Versi stabil yang didukung
       
       - run: flutter pub get
       
