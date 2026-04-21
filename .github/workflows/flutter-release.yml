@@ -24,9 +24,9 @@ jobs:
       
       - name: Regenerate Android folder with V2 embedding
         run: |
-          # Backup konfigurasi penting
+          # Backup AndroidManifest.xml jika ada
           if [ -f android/app/src/main/AndroidManifest.xml ]; then
-            cp android/app/src/main/AndroidManifest.xml AndroidManifest.xml.backup
+            cp android/app/src/main/AndroidManifest.xml /tmp/AndroidManifest.xml.backup
           fi
           
           # Hapus folder android yang lama
@@ -35,12 +35,8 @@ jobs:
           # Buat ulang project dengan V2 embedding
           flutter create --platforms=android --org=com.marsa9 .
           
-          # Restore AndroidManifest.xml jika ada backup
-          if [ -f AndroidManifest.xml.backup ]; then
-            cp AndroidManifest.xml.backup android/app/src/main/AndroidManifest.xml
-          fi
-          
-          # Pastikan MainActivity.kt sudah benar
+          # Buat folder dan file MainActivity.kt dengan benar
+          mkdir -p android/app/src/main/kotlin/com/marsa9/presensi
           cat > android/app/src/main/kotlin/com/marsa9/presensi/MainActivity.kt << 'EOF'
           package com.marsa9.presensi
           
@@ -48,6 +44,14 @@ jobs:
           
           class MainActivity: FlutterActivity()
           EOF
+          
+          # Restore AndroidManifest.xml jika ada backup
+          if [ -f /tmp/AndroidManifest.xml.backup ]; then
+            cp /tmp/AndroidManifest.xml.backup android/app/src/main/AndroidManifest.xml
+          fi
+          
+          # Verifikasi file sudah dibuat
+          ls -la android/app/src/main/kotlin/com/marsa9/presensi/
       
       - run: flutter pub get
       
