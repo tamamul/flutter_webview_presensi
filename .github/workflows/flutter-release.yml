@@ -10,37 +10,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Java
-        uses: actions/setup-java@v4
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
-
-      - name: Setup Flutter
-        run: |
-          git clone https://github.com/flutter/flutter.git --depth 1 -b stable /opt/flutter
-          echo "/opt/flutter/bin" >> $GITHUB_PATH
-          echo "FLUTTER_ROOT=/opt/flutter" >> $GITHUB_ENV
-          sudo apt-get update -qq && sudo apt-get install -y -qq curl xz-utils
-        shell: bash
-
-      - name: Check Flutter version
-        run: flutter --version
-        shell: bash
-
-      - name: Install dependencies
-        run: flutter pub get
-        shell: bash
-
-      - name: Build APK Release
-        run: flutter build apk --release
-        shell: bash
-
-      - name: Upload APK Artifact
-        uses: actions/upload-artifact@v4
+      
+      - uses: britannio/action-flutter@v1.0.0
+        with:
+          flutter-version: '3.19.6'
+      
+      - run: flutter pub get
+      
+      - run: flutter build apk --release
+      
+      - uses: actions/upload-artifact@v4
         with:
           name: app-release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
