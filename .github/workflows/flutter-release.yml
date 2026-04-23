@@ -28,6 +28,9 @@ jobs:
       - name: Get Packages
         run: flutter pub get
 
+      - name: Show Flutter Dependencies
+        run: flutter pub deps
+
       - name: Build APK
         run: flutter build apk --release
 
