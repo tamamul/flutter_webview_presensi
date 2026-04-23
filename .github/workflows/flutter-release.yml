@@ -22,6 +22,10 @@ jobs:
           channel: stable
           flutter-version: '3.32.8'
 
+      - name: Regenerate Android safely
+        run: |
+          flutter create .
+
       - name: Flutter Clean
         run: flutter clean
 
