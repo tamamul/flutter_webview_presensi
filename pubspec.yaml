@@ -20,7 +20,7 @@ dependencies:
   permission_handler: ^11.3.0
 
   # Notifikasi lokal
-  flutter_local_notifications: ^17.2.2
+#  flutter_local_notifications: ^17.2.2
 
   # Lokasi
   geolocator: ^12.0.0
