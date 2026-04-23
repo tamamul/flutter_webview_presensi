@@ -22,47 +22,7 @@ jobs:
           channel: stable
           flutter-version: '3.19.6'
       
-      - name: Regenerate Android folder with V2 embedding
-        run: |
-          # Backup AndroidManifest.xml jika ada
-          if [ -f android/app/src/main/AndroidManifest.xml ]; then
-            cp android/app/src/main/AndroidManifest.xml /tmp/AndroidManifest.xml.backup
-          fi
-          
-          # Hapus folder android yang lama
-          rm -rf android/
-          
-          # Buat ulang project dengan V2 embedding
-          flutter create --platforms=android --org=com.marsa9 .
-          
-          # Buat folder dan file MainActivity.kt dengan benar
-          mkdir -p android/app/src/main/kotlin/com/marsa9/presensi
-          cat > android/app/src/main/kotlin/com/marsa9/presensi/MainActivity.kt << 'EOF'
-          package com.marsa9.presensi
-          
-          import io.flutter.embedding.android.FlutterActivity
-          
-          class MainActivity: FlutterActivity()
-          EOF
-          
-          # Restore AndroidManifest.xml jika ada backup
-          if [ -f /tmp/AndroidManifest.xml.backup ]; then
-            cp /tmp/AndroidManifest.xml.backup android/app/src/main/AndroidManifest.xml
-          fi
-          
-          # === PERBAIKAN UTAMA: Update minSdkVersion di AndroidManifest.xml ===
-          sed -i 's/minSdkVersion="19"/minSdkVersion="21"/g' android/app/src/main/AndroidManifest.xml
-          
-          # === JUGA update di build.gradle ===
-          sed -i 's/minSdkVersion 19/minSdkVersion 21/g' android/app/build.gradle
-          sed -i 's/minSdk 19/minSdk 21/g' android/app/build.gradle
-          
-          # Verifikasi perubahan
-          echo "=== AndroidManifest.xml ==="
-          grep -n "minSdkVersion" android/app/src/main/AndroidManifest.xml || echo "minSdkVersion tidak ditemukan di manifest"
-          echo "=== build.gradle ==="
-          grep -n "minSdk" android/app/build.gradle || echo "minSdk tidak ditemukan di gradle"
-      
+        
       - run: flutter pub get
 
       - name: Clean Flutter
